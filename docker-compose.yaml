@@ -1,0 +1,8 @@
+name: mysql-sew
+services:
+  mysql:
+    environment:
+      - MYSQL_ROOT_PASSWORD=sew
+    ports:
+      - 3308:3306
+    image: mysql:9.4
