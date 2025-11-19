@@ -21,6 +21,7 @@ builder.Services.AddDbContext<WargameContext>(
 
 // register repositories
 builder.Services.AddTransient<IRepository<Tank>, RepositoryBase<Tank>>();
+builder.Services.AddTransient<IRepository<Country>, RepositoryBase<Country>>();
 
 var app = builder.Build();
 
@@ -40,5 +41,6 @@ app.UseHttpsRedirection();
 
 var api = app.MapGroup("/api");
 api.MapTankEndpoints();
+api.MapCountryEndpoints();
 
 app.Run();

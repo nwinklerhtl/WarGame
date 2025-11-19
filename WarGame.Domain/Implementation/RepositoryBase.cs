@@ -7,7 +7,7 @@ using WarGame.Model.Configuration;
 namespace WarGame.Domain.Implementation;
 
 public class RepositoryBase<TEntity> : IRepository<TEntity>
-    where TEntity : IdEntity, new()
+    where TEntity : class, IHasId, new()
 {
     protected readonly WargameContext DbContext;
     protected readonly DbSet<TEntity> Table;

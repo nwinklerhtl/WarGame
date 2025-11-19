@@ -2,10 +2,10 @@ using WarGame.Model.Configuration;
 
 namespace WarGame.Model.Models;
 
-public partial class Country : IdEntity{}
-public partial class Fraction : IdEntity{}
-public partial class Tank : IdEntity{}
-public partial class TankStat : IdEntity{}
-public partial class TankType : IdEntity{}
-public partial class TankWeapon : IdEntity{}
-public partial class Weapon : IdEntity{}
+public partial class Country : IHasId{}
+public partial class Faction : IHasId{}
+public partial class Tank : IHasId{}
+public partial class TankStat : IHasId{}
+public partial class TankType : IHasId{}
+public partial class TankWeapon : IHasId{}
+public partial class Weapon : IHasId{}
