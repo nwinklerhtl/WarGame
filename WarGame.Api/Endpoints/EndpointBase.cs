@@ -4,9 +4,11 @@ using WarGame.Model.Configuration;
 
 namespace WarGame.Api.Endpoints;
 
-public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto> 
-    where TListDto : class, IHasId
+public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto, TUpdateDto> 
+    where TListDto : class, IHasIdGetter
     where TDetailDto : class
+    where TNewDto : class
+    where TUpdateDto : class
 {
     private static string _groupName = string.Empty;
     
@@ -20,6 +22,8 @@ public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto>
         group.MapGet("/{id:int}", GetById);
 
         group.MapPost("/", Create);
+
+        group.MapPut("/{id:int}", Update);
 
         group.MapDelete("/{id:int}", Delete);
     }
@@ -44,6 +48,15 @@ public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto>
     {
         var created = await repo.AddAsync<TNewDto, TListDto>(dto);
         return Results.Created($"/api/{_groupName}/{created.Id}", created);
+    }
+
+    public static async Task<IResult> Update(
+        [FromRoute] int id,
+        [FromServices] IRepository<TEntity> repo,
+        [FromBody] TUpdateDto dto)
+    {
+        await repo.UpdateAsync(id, dto);
+        return Results.NoContent();
     }
 
     public static async Task<IResult> Delete(

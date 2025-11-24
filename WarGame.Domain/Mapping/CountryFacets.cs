@@ -9,7 +9,7 @@ namespace WarGame.Domain.Mapping;
         nameof(Country.Id), 
         nameof(Country.Name), 
         nameof(Country.Continent)])]
-public partial record CountryListDto : IHasId;
+public partial record CountryListDto : IHasIdGetter;
 
 [Facet(typeof(Country), 
     Include = [

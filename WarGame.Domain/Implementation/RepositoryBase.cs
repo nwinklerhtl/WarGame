@@ -47,12 +47,23 @@ public class RepositoryBase<TEntity> : IRepository<TEntity>
             .ToListAsync();
     }
 
-    public virtual async Task<TListDto> AddAsync<TNewDto, TListDto>(TNewDto newDto) where TListDto : class
+    public virtual async Task<TListDto> AddAsync<TNewDto, TListDto>(TNewDto newDto) 
+        where TListDto : class
+        where TNewDto : class
     {
-        var entity = newDto.BackTo<TEntity>();
+        var entity = newDto.BackTo<TNewDto, TEntity>();
         await Table.AddAsync(entity);
         await DbContext.SaveChangesAsync();
         return entity.ToFacet<TListDto>();
+    }
+
+    public virtual async Task UpdateAsync<TUpdateDto>(int id, TUpdateDto updateDto)
+        where TUpdateDto : class
+    {
+        var toUpdate = updateDto.BackTo<TEntity>();
+        toUpdate.Id = id;
+        Table.Update(toUpdate);
+        await DbContext.SaveChangesAsync();
     }
 
     public virtual async Task<bool> DeleteAsync(int id)
