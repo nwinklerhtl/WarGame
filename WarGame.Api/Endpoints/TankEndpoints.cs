@@ -9,7 +9,21 @@ public static class TankEndpoints
 {
     public static void MapTankEndpoints(this IEndpointRouteBuilder routes)
     {
-        EndpointBase<Tank, TankListDto, TankDetailDto, TankCreateDto, TankUpdateDto>
-            .MapEndpoints(routes, "tanks", "Tank");
+        var endpoints = new TankEndpointBase();
+        // map base endpoints
+        var group = endpoints.MapEndpoints(routes, "tanks", "Tank");
+        
+        // map additional endpoints
+        group.MapPost("/fight", endpoints.Fight);
+    }
+
+    // when you need additional endpoints:
+    private class TankEndpointBase : EndpointBase<Tank, TankListDto, TankDetailDto, TankCreateDto, TankUpdateDto>
+    {
+        public async Task<IResult> Fight(
+            [FromServices] IRepository<Tank> repo,
+            [FromQuery] int tankOneId,
+            [FromQuery] int tankTwoId) => 
+            Results.Ok();
     }
 }

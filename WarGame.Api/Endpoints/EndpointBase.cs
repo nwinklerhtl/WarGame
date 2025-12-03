@@ -4,15 +4,15 @@ using WarGame.Model.Configuration;
 
 namespace WarGame.Api.Endpoints;
 
-public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto, TUpdateDto> 
+public class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto, TUpdateDto> 
     where TListDto : class, IHasIdGetter
     where TDetailDto : class
     where TNewDto : class
     where TUpdateDto : class
 {
-    private static string _groupName = string.Empty;
+    private string _groupName = string.Empty;
     
-    public static void MapEndpoints(IEndpointRouteBuilder routes, string groupName, params string[] tags)
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routes, string groupName, params string[] tags)
     {
         var group = routes.MapGroup($"/{groupName}").WithTags(tags);
         _groupName = groupName;
@@ -26,15 +26,17 @@ public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto, TUpdate
         group.MapPut("/{id:int}", Update);
 
         group.MapDelete("/{id:int}", Delete);
+
+        return group;
     }
     
-    public static async Task<IResult> GetList(
+    public async Task<IResult> GetList(
         [FromServices] IRepository<TEntity> repo,
         [FromQuery] int start = 0,
         [FromQuery] int count = 10) => 
         Results.Ok(await repo.GetAsync<TListDto>(start, count));
 
-    public static async Task<IResult> GetById(
+    public async Task<IResult> GetById(
         [FromServices] IRepository<TEntity> repo,
         [FromRoute] int id)
     {
@@ -42,7 +44,7 @@ public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto, TUpdate
         return entry is not null ? Results.Ok(entry) : Results.NotFound();
     }
     
-    public static async Task<IResult> Create(
+    public async Task<IResult> Create(
         [FromServices] IRepository<TEntity> repo,
         [FromBody] TNewDto dto)
     {
@@ -50,7 +52,7 @@ public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto, TUpdate
         return Results.Created($"/api/{_groupName}/{created.Id}", created);
     }
 
-    public static async Task<IResult> Update(
+    public async Task<IResult> Update(
         [FromRoute] int id,
         [FromServices] IRepository<TEntity> repo,
         [FromBody] TUpdateDto dto)
@@ -59,7 +61,7 @@ public static class EndpointBase<TEntity, TListDto, TDetailDto, TNewDto, TUpdate
         return Results.NoContent();
     }
 
-    public static async Task<IResult> Delete(
+    public async Task<IResult> Delete(
         [FromServices] IRepository<TEntity> repo,
         [FromRoute] int id) =>
         await repo.DeleteAsync(id) ? Results.NoContent() : Results.NotFound();

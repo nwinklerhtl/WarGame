@@ -7,7 +7,7 @@ public static class CountryEndpoints
 {
     public static void MapCountryEndpoints(this IEndpointRouteBuilder routes)
     {
-        EndpointBase<Country, CountryListDto, CountryDetailDto, CountryCreateDto, CountryDetailDto>
+        new EndpointBase<Country, CountryListDto, CountryDetailDto, CountryCreateDto, CountryDetailDto>()
             .MapEndpoints(routes, "countries", "Country");
     }
 }
