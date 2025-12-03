@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WarGame.Domain.Implementation;
 using WarGame.Domain.Interfaces;
 using WarGame.Domain.Mapping;
 using WarGame.Model.Models;
@@ -12,7 +13,7 @@ public static class TankEndpoints
         var endpoints = new TankEndpointBase();
         // map base endpoints
         var group = endpoints.MapEndpoints(routes, "tanks", "Tank");
-        
+
         // map additional endpoints
         group.MapPost("/fight", endpoints.Fight);
     }
@@ -21,9 +22,12 @@ public static class TankEndpoints
     private class TankEndpointBase : EndpointBase<Tank, TankListDto, TankDetailDto, TankCreateDto, TankUpdateDto>
     {
         public async Task<IResult> Fight(
-            [FromServices] IRepository<Tank> repo,
+            [FromServices] TankRepository repo,
             [FromQuery] int tankOneId,
-            [FromQuery] int tankTwoId) => 
-            Results.Ok();
+            [FromQuery] int tankTwoId)
+        { 
+            await repo.Fight();
+            return Results.Ok();
+        }
     }
 }

@@ -22,4 +22,9 @@ public class TankRepository(WargameContext dbContext) : RepositoryBase<Tank>(dbC
         await DbContext.SaveChangesAsync();
         return true;
     }
+
+    public Task Fight()
+    {
+        return Task.CompletedTask;
+    }
 }

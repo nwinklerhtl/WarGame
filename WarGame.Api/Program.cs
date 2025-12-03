@@ -20,6 +20,7 @@ builder.Services.AddDbContext<WargameContext>(
 );
 
 // register repositories
+builder.Services.AddTransient<TankRepository>();
 builder.Services.AddTransient<IRepository<Tank>, TankRepository>();
 builder.Services.AddTransient<IRepository<Country>, RepositoryBase<Country>>();
 
